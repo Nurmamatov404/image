@@ -23,6 +23,14 @@ with sync_playwright() as p:
     with open("cookies.json", "r", encoding="utf-8") as f:
         cookies = json.load(f)
 
+    # Cookie fix
+    for cookie in cookies:
+
+        if "sameSite" in cookie:
+
+            if cookie["sameSite"] not in ["Strict", "Lax", "None"]:
+                cookie["sameSite"] = "None"
+
     context.add_cookies(cookies)
 
     page = context.new_page()
