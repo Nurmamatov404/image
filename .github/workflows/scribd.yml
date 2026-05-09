@@ -30,7 +30,7 @@ jobs:
         env:
           SCRIBD_URL: ${{ github.event.inputs.url }}
           PAGE_COUNT: ${{ github.event.inputs.pages }}
-        run: python main.py
+        run: python scribd.py
 
       - name: PDF-ni saqlab olish (Artifact)
         uses: actions/upload-artifact@v3
