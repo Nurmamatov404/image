@@ -1,35 +1,39 @@
-name: Scribd PDF
-
+name: Scribd to PDF
 on:
   workflow_dispatch:
+    inputs:
+      url:
+        description: 'Scribd hujjat URL manzili'
+        required: true
+      pages:
+        description: 'Necha sahifa kerak?'
+        required: true
+        default: '5'
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    env:
-      BOOK_URL: "https://www.scribd.com/document/692172652/Innova-to-Plam-2023"
-      TOTAL_PAGES: "20"
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Kodni yuklab olish
+        uses: actions/checkout@v3
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - name: Pythonni sozlash
+        uses: actions/setup-python@v4
         with:
-          python-version: "3.11"
+          python-version: '3.9'
 
-      - name: Install
+      - name: Kutubxonalarni o'rnatish
         run: |
-          pip install -r requirements.txt
-          playwright install chromium
+          pip install selenium pillow
 
-      - name: Run
-        run: python scribd.py
+      - name: Skriptni ishga tushirish
+        env:
+          SCRIBD_URL: ${{ github.event.inputs.url }}
+          PAGE_COUNT: ${{ github.event.inputs.pages }}
+        run: python main.py
 
-      - name: Upload
-        uses: actions/upload-artifact@v4
+      - name: PDF-ni saqlab olish (Artifact)
+        uses: actions/upload-artifact@v3
         with:
           name: scribd-pdf
-          path: book.pdf
+          path: result.pdf
