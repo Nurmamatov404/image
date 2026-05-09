@@ -1,0 +1,35 @@
+name: Scribd PDF
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      BOOK_URL: "https://www.scribd.com/document/692172652/Innova-to-Plam-2023"
+      TOTAL_PAGES: "20"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install
+        run: |
+          pip install -r requirements.txt
+          playwright install chromium
+
+      - name: Run
+        run: python scribd.py
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: scribd-pdf
+          path: book.pdf
